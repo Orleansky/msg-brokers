@@ -2,7 +2,6 @@ package main
 
 import (
 	"Anastasia/effective_mobile/msg_brokers/consumer/internal/consumer"
-	consumergroup "Anastasia/effective_mobile/msg_brokers/consumer/internal/consumer_group"
 	"log"
 
 	"github.com/IBM/sarama"
@@ -10,9 +9,9 @@ import (
 
 func main() {
 	addrs := []string{"localhost:9092"}
+	// topic := "test-topic"
 	topic := "multi-partition-topic"
 	group := "test-group"
-	// topic := "test-topic"
 
 	cfg := sarama.NewConfig()
 	cfg.Producer.Return.Successes = true
@@ -22,7 +21,6 @@ func main() {
 		log.Fatal("Failed to create consumer")
 	}
 	defer c.Close()
-	consumer.SyncRead(c, topic)
 
 	cg, err := sarama.NewConsumerGroup(addrs, group, cfg)
 	if err != nil {
@@ -30,5 +28,8 @@ func main() {
 	}
 	defer cg.Close()
 
-	consumergroup.Read(cg, topic)
+	// Выбрать один метод для проверки
+	consumer.SyncRead(c, topic)
+	// consumer.AsyncRead(c, topic)
+	// consumergroup.Read(cg, topic)
 }

@@ -23,6 +23,11 @@ func main() {
 		log.Printf("Error creating producer: %v", err)
 	}
 
+	// p, err := sarama.NewAsyncProducer(addrs, cfg)
+	// if err != nil {
+	// 	log.Printf("Error creating producer: %v", err)
+	// }
+
 	defer p.Close()
 
 	admin, err := sarama.NewClusterAdmin(addrs, cfg)
@@ -32,7 +37,8 @@ func main() {
 
 	defer admin.Close()
 
+	// Выбрать один метод для проверки
 	producer.MultiPartitionSend(admin, p, topic, partitionCount)
-
 	// producer.SyncSend(p, topic)
+	// producer.AsyncSend(p, topic)
 }
